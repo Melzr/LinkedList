@@ -4,6 +4,14 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+
+/*
+ * Destructor de elementos. Cada vez que un elemento deja la lista
+ * se invoca al destructor pasandole el elemento.
+ */
+typedef void (*lista_destructor)(void*);
+
+
 typedef struct nodo{
     void* elemento;
     struct nodo* siguiente;
@@ -13,6 +21,7 @@ typedef struct lista{
     nodo_t* nodo_inicio;
     nodo_t* nodo_fin;
     size_t cantidad;
+    lista_destructor destructor;
 }lista_t;
 
 typedef struct lista_iterador{
@@ -24,7 +33,7 @@ typedef struct lista_iterador{
  * Crea la lista reservando la memoria necesaria.
  * Devuelve un puntero a la lista creada o NULL en caso de error.
  */
-lista_t* lista_crear();
+lista_t* lista_crear(lista_destructor destrructor);
 
 /*
  * Inserta un elemento al final de la lista.

@@ -9,9 +9,13 @@ const int ELEMENTOS_A_INSERTAR = 10000;
 const int VECES_A_ITERAR = 100;
 
 
+void lista_destruir_elemento(void* elemento) {
+	return;
+}
+
 void pruebas_crear_lista() {
 	lista_t* lista = NULL;
-	pa2m_afirmar((lista=lista_crear()) != NULL, "Se puede crear una lista");
+	pa2m_afirmar((lista=lista_crear(lista_destruir_elemento)) != NULL, "Se puede crear una lista");
 	pa2m_afirmar(lista_vacia(lista) && (lista_elementos(lista) == 0), "La lista esta vacia");
 	pa2m_afirmar(lista_ultimo(lista) == NULL, "El ultimo elemento es NULL");
 	pa2m_afirmar( lista_elemento_en_posicion(lista, 10) == NULL, "No pudo devolver el elemento de una posicion inexistente");
@@ -22,7 +26,7 @@ void pruebas_insertar_lista(){
 	lista_t* lista = NULL;
 	int elemento_1 = 0, elemento_2 = 34, elemento_3 = -5;
 	pa2m_afirmar(lista_insertar(lista, &elemento_1) == ERROR, "No se puede insertar un elemento en una lista nula");
-	lista = lista_crear();
+	lista = lista_crear(lista_destruir_elemento);
 	pa2m_afirmar(lista_insertar(lista, &elemento_1) == EXITO, "Se puede insertar al final de la lista vacia");
 	pa2m_afirmar(lista_elementos(lista) == 1, "La lista tiene un elemento");
 	pa2m_afirmar(lista_primero(lista) == &elemento_1, "El primer elemento es correcto");
@@ -43,7 +47,7 @@ void pruebas_insertar_lista(){
 void pruebas_borrar_lista() {
 	lista_t* lista = NULL;
 	pa2m_afirmar(lista_borrar(lista) == ERROR, "No se puede borrar un elemento en una lista nula");
-	lista = lista_crear();
+	lista = lista_crear(lista_destruir_elemento);
 	pa2m_afirmar(lista_borrar(lista) == ERROR, "No se puede borrar un elemento en una lista vacia");
 	int elemento_1 = 0, elemento_2 = 34, elemento_3 = -5;
 
@@ -119,7 +123,7 @@ bool elementos_correctos(lista_t* lista, void* elemento, int cantidad) {
 }
 
 void pruebas_muchos_elementos_lista() {
-	lista_t* lista = lista_crear();
+	lista_t* lista = lista_crear(lista_destruir_elemento);
 	int elemento = 5;
 	int cantidad = ELEMENTOS_A_INSERTAR;
 
@@ -141,7 +145,7 @@ void pruebas_lista() {
 
 void pruebas_pila() {
 
-	lista_t* pila = lista_crear();
+	lista_t* pila = lista_crear(lista_destruir_elemento);
 	char elemento[30];
 	strcpy(elemento, "abcdefghijklmnopqrstuvwxyz");
 
@@ -177,7 +181,7 @@ void pruebas_pila() {
 
 void pruebas_cola() {
 
-	lista_t* cola = lista_crear();
+	lista_t* cola = lista_crear(lista_destruir_elemento);
 	int elementos[5] = {1, 2, 3, 4, 5};
 
 	pa2m_afirmar( lista_encolar(NULL, &elementos[0]) == ERROR, "No se puede encolar en una cola nula");
@@ -221,7 +225,7 @@ bool iterar_todos(void* elemento, void* contexto){
 }
 
 void pruebas_iterador_interno() {
-	lista_t* lista = lista_crear();
+	lista_t* lista = lista_crear(lista_destruir_elemento);
 	int elemento = 10, iteraciones = 0;
 	bool (*funcion)(void*, void*) = iterar_todos;
 	pa2m_afirmar(lista_con_cada_elemento(lista, funcion, NULL) == 0, "El iterador interno itera 0 veces una lista vacia");
@@ -236,7 +240,7 @@ void pruebas_iterador_interno() {
 }
 
 void pruebas_iterador_sin_lista(){
-	lista_t* lista_vacia = lista_crear();
+	lista_t* lista_vacia = lista_crear(lista_destruir_elemento);
 	pa2m_afirmar(lista_iterador_crear(NULL) == NULL, "No se puede crear un iterador con una lista nula");
 	lista_iterador_t* iterador = lista_iterador_crear(lista_vacia);
 	pa2m_afirmar(iterador != NULL, "Se puede crear un iterador con una lista vacia");
@@ -250,7 +254,7 @@ void pruebas_iterador_sin_lista(){
 
 void pruebas_iterador_externo() {
 	
-	lista_t* lista = lista_crear();
+	lista_t* lista = lista_crear(lista_destruir_elemento);
 	int elemento = 10, iteraciones = 0;
 	bool elementos_correctos = true;
 	insertar_varias_veces_lista(lista, &elemento, VECES_A_ITERAR);

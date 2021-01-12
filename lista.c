@@ -27,9 +27,10 @@ int inicializar_lista(lista_t* lista) {
 }
 
 
-lista_t* lista_crear() {
+lista_t* lista_crear(lista_destructor destructor) {
 
 	lista_t* lista = malloc(sizeof(lista_t));
+	lista->destructor = destructor;
 	inicializar_lista(lista);
 	
 	return lista;
@@ -150,6 +151,9 @@ int lista_borrar(lista_t* lista) {
 		return EXITO;
 	}
 
+	if (lista->destructor != NULL)
+		lista->destructor(lista->nodo_fin->elemento);
+
 	int i = 1;
 	bool error = false;
 	lista->cantidad--;
@@ -198,6 +202,8 @@ int lista_borrar_de_posicion(lista_t* lista, size_t posicion) {
 		if (i == posicion-1) {
 			nodo_t* nodo_aux = nodo_actual->siguiente;
 			nodo_actual->siguiente = nodo_actual->siguiente->siguiente;
+			if (lista->destructor != NULL)
+				lista->destructor(nodo_aux->elemento);
 			free(nodo_aux);
 		} else
 			nodo_actual = nodo_actual->siguiente;
