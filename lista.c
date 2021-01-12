@@ -146,6 +146,8 @@ int lista_borrar(lista_t* lista) {
 		return ERROR;
 
 	if (lista->cantidad == 1) {
+		if (lista->destructor != NULL)
+			lista->destructor(lista->nodo_inicio->elemento);
 		free(lista->nodo_inicio);
 		inicializar_lista(lista);
 		return EXITO;
@@ -188,6 +190,8 @@ int lista_borrar_de_posicion(lista_t* lista, size_t posicion) {
 	if (posicion == 0) {
 		nodo_t* nodo_aux = lista->nodo_inicio;
 		lista->nodo_inicio = lista->nodo_inicio->siguiente;
+		if (lista->destructor != NULL)
+			lista->destructor(nodo_aux->elemento);
 		free(nodo_aux);
 		return EXITO;
 	}
